@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW dashboard_totals AS
+CREATE OR REPLACE VIEW v_dashboard_totals AS
 SELECT 
   (SELECT COUNT(*) FROM activity WHERE active = TRUE and type::text = 'COURSE') AS total_courses,
   (SELECT COUNT(DISTINCT a.id) FROM alert a) AS total_alerts,
@@ -102,5 +102,12 @@ SELECT
   ) AS total_rate_course,
   (SELECT COUNT(*) FROM school s WHERE s.active = TRUE) AS total_schools
 ;
+
+
+CREATE INDEX idx_email_school_composite ON email_school (id_email, id_school);
+CREATE INDEX idx_email_composite ON email (active, visible, internal_user);
+CREATE INDEX idx_log_course_id_email ON log_course (id_email);
+CREATE INDEX idx_activity_active_type ON activity (active, type);
+CREATE INDEX idx_school_active ON school (active);
 
 select * from dashboard_totals
